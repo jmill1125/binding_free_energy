@@ -6,8 +6,12 @@ import re
 
 path_to_file = os.path.dirname(os.path.abspath(__file__))
 
-def create_Boresch_restraint(restraint_atoms_1, restraint_atoms_2, restraint_constant, restraint_lower_distance, restraint_upper_distance):
-
+def create_Boresch_restraint(host_atoms, guest_atoms):
+    host_atoms = list(intspan(host_atoms))
+    guest_atoms = list(intspan(guest_atoms))
+    # OpenMM atom index starts at zero while FFX starts at 1.
+    host_atoms = [i - 1 for i in host_atoms]
+    guest_atoms = [i - 1 for i in guest_atoms]
     # Set bond restraint properties 
     bond_energy_function = "lambda_restraints*(K/2)*(r-r0)^2;"
     harmonicforce=CustomBondForce(bond_energy_function)
@@ -33,31 +37,31 @@ def create_Boresch_restraint(restraint_atoms_1, restraint_atoms_2, restraint_con
     # Add bond
     bondlength=6.2*unit_definitions.angstroms
     bondforce=10.0*unit_definitions.kilocalorie_per_mole/unit_definitions.angstroms**2
-    harmonicforce.addBond(10,219, [bondlength,bondforce])
+    harmonicforce.addBond(host_atoms[0], guest_atoms[0], [bondlength, bondforce])
 
     # Add angles
 
     restrainedangle=0.76*unit_definitions.radians
     angleconst=500*unit_definitions.kilocalorie_per_mole/unit_definitions.radian**2
-    angleforce.addAngle(62,10,219,[restrainedangle,angleconst])
+    angleforce.addAngle(host_atoms[1], host_atoms[0], guest_atoms[0], [restrainedangle, angleconst])
 
     restrainedangle=2.01*unit_definitions.radians
     angleconst=500*unit_definitions.kilocalorie_per_mole/unit_definitions.radian**2
-    angleforce.addAngle(10,219,225,[restrainedangle,angleconst])
+    angleforce.addAngle(host_atoms[0], guest_atoms[0], guest_atoms[1], [restrainedangle, angleconst])
 
     # Add torsion
 
     restrainedtorsion=(-0.57-3.14)*unit_definitions.radians
     torsionconst=500*unit_definitions.kilocalorie_per_mole
-    torsionforce.addTorsion(124,62,10,219,[1, restrainedtorsion,torsionconst])
+    torsionforce.addTorsion(host_atoms[2], host_atoms[1], host_atoms[0], guest_atoms[0], [1, restrainedtorsion, torsionconst])
 
     restrainedtorsion=(-1.02-3.14)*unit_definitions.radians
     torsionconst=500*unit_definitions.kilocalorie_per_mole
-    torsionforce.addTorsion(62,10,219,225,[1, restrainedtorsion,torsionconst])
+    torsionforce.addTorsion(host_atoms[1],host_atoms[0],guest_atoms[0],guest_atoms[1],[1, restrainedtorsion,torsionconst])
 
     restrainedtorsion=(-2.28-3.14)*unit_definitions.radians
     torsionconst=500*unit_definitions.kilocalorie_per_mole
-    torsionforce.addTorsion(10,219,225,224,[1, restrainedtorsion,torsionconst])
+    torsionforce.addTorsion(host_atoms[0],guest_atoms[0],guest_atoms[1],guest_atoms[2],[1, restrainedtorsion,torsionconst])
 
     return harmonicforce, angleforce, torsionforce
 
@@ -69,8 +73,9 @@ def create_COM_restraint(restraint_atoms_1, restraint_atoms_2, restraint_constan
     restraint_atoms_2 = [i - 1 for i in restraint_atoms_2]
 
     convert = openmm.KJPerKcal / (openmm.NmPerAngstrom * openmm.NmPerAngstrom)
-    restraintEnergy = "step(distance(g1,g2)-u)*k*(distance(g1,g2)-u)^2+step(l-distance(g1,g2))*k*(distance(g1,g2)-l)^2"
+    restraintEnergy = "lambda_restraints*step(distance(g1,g2)-u)*k*(distance(g1,g2)-u)^2+step(l-distance(g1,g2))*k*(distance(g1,g2)-l)^2"
     restraint = openmm.CustomCentroidBondForce(2, restraintEnergy)
+    restraint.addGlobalParameter('lambda_restraints', 1.0)
     restraint.setForceGroup(0)
     restraint.addPerBondParameter("k")
     restraint.addPerBondParameter("l")

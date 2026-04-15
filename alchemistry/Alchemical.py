@@ -64,13 +64,15 @@ def setup_alchemical_forces(system):
 
     vdwForce = system.getForce(forceDict.get('AmoebaVdwForce'))
     vdwForce.setForceGroup(1)
+    vdwForce.setUseDispersionCorrection(False)
+    print(f"Use Dispersion Correction? {vdwForce.getUseDispersionCorrection()}")
     multipoleForce = system.getForce(forceDict.get('AmoebaMultipoleForce'))
     multipoleForce.setForceGroup(1)
     return vdwForce, multipoleForce
 
 
-def update_lambda_values(context, vdw_lambda, elec_lambda, vdwForce, multipoleForce, alchemical_atoms,
-                         default_elec_params):
+def update_lambda_values(context, vdw_lambda, elec_lambda, vdwForce, multipoleForce,
+                         alchemical_atoms, default_elec_params):
     """Update lambda values and force parameters using saved default electrostatic parameters."""
     # Parse alchemical_atoms input
     alchemical_atoms = list(intspan(alchemical_atoms))
