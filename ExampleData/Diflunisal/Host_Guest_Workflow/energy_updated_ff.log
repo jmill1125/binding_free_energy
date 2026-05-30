@@ -1,0 +1,16 @@
+Force dictionary: {'AmoebaBond': 0, 'PeriodicTorsionForce': 1, 'AmoebaVdwForce': 2, 'AmoebaMultipoleForce': 3, 'HarmonicBondForce': 4, 'CMMotionRemover': 5, 'AmoebaOutOfPlaneBend': 6, 'AmoebaAngle': 7, 'AmoebaInPlaneAngle': 8, 'AmoebaStretchBend': 9}
+Use Dispersion Correction? False
+{'AmoebaBond': 0, 'PeriodicTorsionForce': 1, 'AmoebaVdwForce': 2, 'AmoebaMultipoleForce': 3, 'HarmonicBondForce': 4, 'CMMotionRemover': 5, 'AmoebaOutOfPlaneBend': 6, 'AmoebaAngle': 7, 'AmoebaInPlaneAngle': 8, 'AmoebaStretchBend': 9}
+-35839.91832259052 kcal/mol
+Alchemical atoms: [217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242]
+1.0
+AmoebaBond 3053.9956029013056 kcal/mol
+PeriodicTorsionForce 35.87353730976695 kcal/mol
+AmoebaVdwForce 17510.708694020374 kcal/mol
+AmoebaMultipoleForce -58078.46436947299 kcal/mol
+HarmonicBondForce -87.47491553910147 kcal/mol
+CMMotionRemover 0.0 kcal/mol
+AmoebaOutOfPlaneBend 2.3027100025125944 kcal/mol
+AmoebaAngle 1712.9192899335637 kcal/mol
+AmoebaInPlaneAngle 10.49988219660509 kcal/mol
+AmoebaStretchBend -0.2781654749044269 kcal/mol
